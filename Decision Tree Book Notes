@@ -1,0 +1,191 @@
+Chapter 1
+Part 1: general forest model - unified classification, regression, density estimation, manifold learning, semi-supervised learning and active learning under same flexible framework
+Model to be used in discriminative or generative way
+Based on conventional training - testing framework, with training phase trying to optimize well defined energy function
+Tasks - classification or density estimation, supervised or unsupervised problems can all be addressed by setting specific model for objective function as well as output prediction function
+Part 2: collected of invited chapters, building different applications
+Part 3: implementation details, documentation, concluding remarks
+
+History
+Combining decision trees with ensemble methods gave rise to decision forests (ensembles of randomly trained decision trees). The idea of constructing and using ensembles of trees used for handwritten digit recognition
+Forests yield superior generalization to boosting and pruned trees, comparison between different split functions in tree nodes. 
+
+Chapter 2
+Split node - internal node, decision node, branch node
+Leaf node - terminal node
+Weak learner - split function, test function, feature
+Selector function - filter function 
+
+Chapter 3: The Abstract Forest Model
+
+Overview: trees structure is special type of graph made of collection of nodes and edges organized in hierarchical fashion. Nodes are either internal (split) nodes and terminal (leaf) nodes. 
+The key to good function of decision tree is so establish: 
+	The tests associated with each node
+	The decision-making predictors associated with each leaf
+Tree also as technique for splitting complex problems into simpler ones
+
+Number of features naturally depends on type of data point as well as application
+Extract only a small portion of d on an as-needed basis
+
+Split function = test function = weak learner
+Each node has different associated test function, as a function with binary inputs
+
+Training point (v, y) where v is input data point and y is generic, known label
+Functioning of decision trees can be separated in off-line training and on-line phase 
+Two phases as well as other components of random decision trees
+
+Each split node applies its associated test function. Depending on result, data point is sent to left or right, process repeated until data point reaches leaf node, contains predictor/estimate which associates an output with input v
+During training we also ended to choose the tree structure (size and shape). Training starts at root node j= 0 where optimum split parameters are found as described earlier. Construct two child nodes, each receiving a different disjoint subset of the training set. Procedure applied recursively all nodes and training phase continues until a stopping criterion is met
+
+Stopping criteria can be applied, such as max number of levels D or minimum value of information gain, too few training points. Avoiding growing full trees has positive effects in terms of generalization. Avoid tree pruning to keep training process as simple as possible. At end of training we obtain: greedily optimum weak learners split functions associated with each node and learned tree structure, and different set of training points at each leaf. 
+
+Parametrizations include linear model, corresponds to using single-inequality test function
+Special case of weka learner is where line is aligned with one of axes of feature space, often used in boosting literature and referred to as decision stumps. 
+Axis-aligned case is over-parametrized, chose this because it highlights role of geometric model and generalizes to more complex cases. 
+
+More complex weak learners obtained by replacing hyperplanes with higher degree of freedom surfaces. Low dim weak learners can be used even for data that originally reside in very high dim space. Selector function can select different, small set of features and can be different for different nodes. 
+Weak learner models. But one may use more complex functions such as SVM, boosting, 
+Number of degrees of freedom of weak learner influences heavily the forest generalization properties. 
+
+Energy model determines the prediction and estimation behavior of a decision tree. 
+
+Tree training phase driven by statistics of training set
+Basic building blocks are entropy and information gain
+Information gain associated with tree split node defined as reduction in uncertainty achieved by splitting training data arriving at the node into multiple child subsets
+Weighting the entropy by the cardinality of the child sets avoids splitting off children containing very few points
+
+Aim of training phase is to learn parameters that best split the training data
+If we use children rather than parent we would have more chances of correct prediction, have reduced the uncertainty of prediction
+Intuitive explanation can be formulated using quantitative information gain, using Shannon entropy
+Computed as normalized histogram of the class labels, empirical distribution over classes is uniform since in this example we have exactly the same number of points for each class, corresponds to large entropy for the training set. The children distributions are more pure, entropy has decreased, information content increased, reflected in information gain
+
+We can use the information gain as training objective function
+Maximizing information gain helps select the split parameters which produce highest confidence, lowest uncertainty in the final distributions, concept is at the basis of decision tree training 
+
+Training phase is in charge of estimating optimal weak learners and tree structure
+Associated label must be similar to that of training points in that leaf
+Justified using the label statistics gathered in that leaf to predict label associated with input test point. 
+Leaf statistics can be captured using conditional distributions where c and y represent categorical and continuous labels, respectively. In general it is preferable to keep the entire distribution around until final moment where decision must be taken, rather than early point estimate, allows us to reason about prediction uncertainty. 
+
+Randomness injected into trees during training phase. Using random training set sampling (bagging) and randomized node optimization. 
+
+Bagging - reduce overfitting and improving generalization capabilities of random forest. Train each tree in forest on different training subset, sampled at random from same labeled database. 
+Avoid specializing selected parameters to single training est, improve generalization
+Training is also faster than using the entire set
+
+Randomized node optimization - done with respect to entire parameter space, drawback is efficiency
+Optimizing by searching over T not feasible or desirable
+Maximization is performed as simple search over smaller, discrete set Tj. 
+
+Bagging and randomized node optimization not mutually exclusive and could be used together. 
+
+Random Decision forest is ensemble of randomly trained decision trees. Key aspect of forest model is face that component trees are randomly different from one another
+Leads to de-correlation between individual tree predictions, results in improved generalization and robustness. Forest model characterized by same components as decision trees. Family of weak learners (test functions), energy model, leaf predictors, type of randomness influence prediction/estimation properties of the forests. The randomness parameter controls not only amount of randomness within each tree, but also the amount of correlation between different trees in the forest. 
+
+Averaging and the product operations produce combined distributions which are heavily influenced by the most confident, most informative trees. Simple operations have effect of selecting the more confident trees out of the forest. Selection is carried out at leaf by leaf level and more confident trees may be different for different leaves. Averaging many tree posteriors has advantage of reducing effect of possibly noisy tree contributions. Product based ensemble model produces sharper distributions and may be less robust to noise. Alternative ensemble models are possible, one may choose to select individual trees in hard way. 
+
+Key model parameters: 
+Maximum allowed tree depth D
+Amount of randomness (controlled by p) and its type
+Forest size T 
+Choice of weak learner model
+Training objective function
+Choice of features in practical applications
+Choices directly affect the forest predictive accuracy, quality of its confidence, its generalization and computational efficiency 
+
+Choice of stopping criteria has direct influence on shape of trees (balanced or not) 
+Very unbalanced trees should be avoided 
+At the limit, may become just chains of weak learners, with little feature sharing and thus little generalization
+
+Chapter 4 Classification Forests
+One of most widely used classification algs is support vector machine (SVM) popularity is mostly due to fact that in binary classification problems (guarantees maximum margin separation). Property yields good generalization with relatively little training data
+
+Boosting - build strong classifiers as linear combination of many weak classifiers. Boosted classifier is trained iteratively, each iteration the training examples for which the classifier works less well are boosted by increasing associated training weight
+Cascaded boosting used in efficient face detection and localization in images, task handled even by entry level digital cameras and webcams
+
+Classification task: given a labeled set of training data learn a general mapping which associates previously unseen test data with their corresponding classes. 
+The desired output is of discrete, categorical, unordered type. 
+
+Training a classification tree by maximizing the information gain has the tendency to produce trees where the entropy of the class distributions associated with the nodes decreases when going from the root towards the leaves. Yields increasing certainty of prediction. 
+
+Unbalanced distribution of classes can be mitigated by resampling the training data to have roughly uniform training distributions. Alternative is to use known prior class distribution to weight the contribution of each class by its inverse frequency when computing the information gain at each split node 
+
+Randomness injected via randomized node optimization. Information gain maximization is then carried out by exhaustive search on this reduced set of possibilities. It is not necessary to have the entire set computed in advance and stored. Can generate each random subset as needed before starting training the corresponding node. 
+
+Classification forest produce probabilities output as return not just single class point prediction but an entire class distribution
+Averaging tree posteriors is only one possible choice of ensemble model
+
+Training points belonging to two different classes are randomly drawn from two well separated Gaussian distributions. Trees randomly different from one another, each defines slightly different partition of data. 
+Each individual tree produces overconfident predictions - undesirable. Intuitively, expect confidence of classification to be reduce for test data, different than training data. Larger the difference, larger the uncertainty. Observe higher confidence near training points and lower confidence away from training regions of space, intuitive generalization behavior. 
+Box -like artifacts yield low quality confidence estimate and imperfect generalization 
+
+Advantage of forests can handle both binary and multi-class problems 
+
+As tree depth increases the overall prediction also increases, in large gaps, the optimal separating surface tends to be placed roughly in the middle of the gap. 
+Notice large value of D tends to produce overfitting, changing the maximum tree depth parameter D is one way to control amount of overfitting 
+Too shallow trees produce washed-out, low-confidence posteriors
+Using multiple trees alleviates overfitting problem of individual trees, does not cure it completely 
+Careful to select most appropriate value of D as its optimal value is function of problem complexity. 
+
+Axis-aligned weak learner produces overconfidence predictions in the corners of the space. Confidence value is independent of distance from training points. Increasing D increases confidence output, axis-aligned model may still separate training data well, but produces large blocky artifacts in test regions. 
+
+Larger randomness yield much lower overall confidence, noticeable especially in shallower trees
+Disadvantage - sampled from larger parameters space
+Finding discriminate sets of parameter values may be time consuming
+Specific weak learner to use depends on efficiency as well as accuracy, application dependent 
+
+Ability to separate data belonging to different classes via margin-maximizing surface
+Yields good generation even with relatively little training data. Important property is replicated in random classification forests. 
+
+Each individual tree is not guaranteed to produce maximum margin separation
+For perfectly separable data each tree produces overconfident posteriors 
+Combination in a forest yields fully probabilistic and smooth posteriors 
+
+Optimal separating surface is less sharply defined. Effect of individual training points is weaker as compared to entire mass of training data; no longer possible to identify individual support vectors, advantageous in presence of “sloppy” or inaccurate training data. 
+
+Complex weak learners affect shape and orientation of optimal, hard classification surface
+Position and orientation of separation boundary is more/less sensitive of individual training points depending on value of p. Little randomness produces behavior closer to that of support vector machines
+
+In bagging, randomness is injected by randomly sampling different subsets of training data. Each tree sees different training subse. Node parameters are fully optimized on this set. Specific support vectors may not be available in some of trees. Posterior associated with those trees then tend to move the optimal separating surface away form maximum margin one. 
+
+Introduction of training set randomization leads to smoother posteriors whose optimal boundary does not coincide by how much randomness we inject in system. If we were to take all training data then we would reproduce a max-margin behavior. Advantage of bagging is increase training speed.  
+
+Chapter 5
+
+Output label is continuous
+Simplest is linear regression, not appropriate when trying to model most natural phenomena
+Popular technique is RANSAC - output is non probabilistic 
+Regression forests extension of RANSAC
+
+
+Regression task is inductive, with main difference is continuous nature of output 
+Given a multivariate input v we wish to associate a continuous multivariate label y 
+Wish to estimate probability density 
+
+Regression Forest is collection of randomly trained regression trees
+Shown that in general, regression forest generalizes better than single fully optimized regression tree
+
+Regression trees split complex non-lienar reg problem into set of smaller
+
+For prediction, use a probability density function over continuous variable y 
+In general, the leaf probability can be multi-modal
+
+Forest output is average of all tree outputs
+
+Randomized node optimization model
+Amount of randomness controlled by parameter 
+
+Regression trees trained by minimizing a least-squares or least-absolute error function
+Here, use a continuous formulation of information gain - makes use of functional form of differential entropy of Gaussian density
+
+Also easy to upgrade derivation of multivariate variables
+
+During training with weak-learners, each leaf model produces smaller uncertainty near the training points and larger uncertainty away from them. In the gap, the actual split happens in different places (due to randomness) along the x axis for different trees
+
+As number of trees increases, both the prediction mean curve and uncertainty become smoother. Thus smoothness of interpolating curve is controlled here by forest size T. Can also observe how uncertainty increases as we  move away from training data 
+
+A forest with depth 1 under-fits but a forest with depth 5 over fits 
+
+Uncertainty increases away from training data
+The regression forest can correctly capture multi-model posteriors
+
