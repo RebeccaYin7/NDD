@@ -1,0 +1,10 @@
+Test statistic should be mutual information, not conditional entropy 
+
+Need to show that it works first, before simulations
+
+Using old UF which has finite sample correction, 
+
+Perm test to get p-value, statistic
+
+After correcting calculations, do power curve simulations 
+
