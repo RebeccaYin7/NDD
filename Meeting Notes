@@ -1,0 +1,17 @@
+11/3 Meeting with Sambit
+
+issues with multivariate-nomral.pdf --> to be imported from numpy
+
+test-stat is observed
+
+perm-test 
+  null distribution & p-value
+  
+ Personal Notes: 
+ Skicit entropy func is entropy function estimator H(Y|X=x) = -Sum(p(y|x)log(y|x)) so can call entropy 
+ 
+ uf in uncertainty-forest -- returns calculated conditional entropy? 
+ 
+ est mi - reference fig 3 & include multi dimensional implementation 
+ 
+ 
