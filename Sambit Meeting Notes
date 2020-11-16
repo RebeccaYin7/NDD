@@ -1,0 +1,31 @@
+11-16 Sambit Meeting
+Goal: to determine reason behind slow code 
+
+List Comprehension
+- replace for i in range(len(est_nodes))
+
+replace sklearn use with numba used instead
+- particularly with large matrix multiplication
+- will make faster
+
+nested for loops slow down the code 
+- got rid of iteration over pis 
+
+Parallelized def: run all at same time (of for loop) on different cores
+
+mi function
+- only calculated for one forest
+- estimate_mi run only once after tree is built
+
+Sambit previous testing 
+- train RF
+- compute similarity matrix (if two obs in same leaf node - similar) 
+- over all trees to get matrix
+- compute eucl distance (matrix)
+- calculate test stat
+
+For me: 
+- train forest & est_mi = test stat
+- p value: permute input 1000x, test stat
+- estimate_mi, no iterating through pi's 
+- every time for test stat, train new forest (using uf) but only calculate mi once 
